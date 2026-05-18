@@ -6,7 +6,7 @@
 # =============================================================
 
 # ── KONFIGURASI — edit bagian ini ─────────────────────────────
-SERVER_IP="your.tencent.server.ip"
+SERVER_IP="43.157.228.252"
 SERVER_USER="root"              # atau ubuntu / lighthouse
 SSH_KEY="~/.ssh/id_rsa"         # path SSH key kamu
 REMOTE_DIR="/var/www/asyura-quality-tracker"

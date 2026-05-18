@@ -1270,6 +1270,7 @@ function toggleCheck(id) {
   data.checks[id] = !data.checks[id];
   saveAll();
   renderAll();
+  showToast('Data berhasil disimpan');
 }
 
 function changeDay(delta) {
@@ -1513,11 +1514,12 @@ loadAll();
 renderAll();
 
 document.getElementById('notesArea').addEventListener('blur', saveNotes);
+document.getElementById('notesArea').addEventListener('input', saveNotes);
 document.getElementById('defectInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') addDefect();
+    if (e.key === 'Enter') addDefect();
 });
 document.getElementById('newTaskInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') addTask();
+    if (e.key === 'Enter') addTask();
 });
 </script>
 </body>
