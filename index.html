@@ -1041,7 +1041,17 @@ function saveAll() {
   try {
     localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(allData));
     localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(taskList));
+    return true;
   } catch(e) {
+    console.error("Failed to save to localStorage:", e);
+    return false;
+  }
+}
+
+function saveAndNotify(message = 'Data berhasil disimpan ✓') {
+  if (saveAll()) {
+    showToast(message);
+  } else {
     showToast('Gagal simpan ke cache', true);
   }
 }
@@ -1219,9 +1229,8 @@ function addTask() {
   const id = 'custom_' + Date.now();
   taskList.push({ id, cat, label });
   inp.value = '';
-  saveAll();
+  saveAndNotify('Task ditambahkan ✓');
   renderAll();
-  showToast('Task ditambahkan ✓');
 }
 
 function deleteTask(id, e) {
@@ -1236,9 +1245,8 @@ function deleteTask(id, e) {
       taskList = taskList.filter(t => t.id !== id);
       // Clean up checks across all days
       Object.values(allData).forEach(d => { delete d.checks[id]; });
-      saveAll();
+      saveAndNotify('Task dihapus');
       renderAll();
-      showToast('Task dihapus');
     }
   );
 }
@@ -1254,9 +1262,8 @@ function resetCategory(cat, e) {
       Object.values(allData).forEach(d => {
         removed.forEach(id => delete d.checks[id]);
       });
-      saveAll();
+      saveAndNotify(`Semua task ${TAG_MAP[cat]} dihapus`);
       renderAll();
-      showToast(`Semua task ${TAG_MAP[cat]} dihapus`);
     }
   );
 }
@@ -1268,9 +1275,8 @@ function toggleCheck(id) {
   const key  = dateKey(currentOffset);
   const data = getDayData(key);
   data.checks[id] = !data.checks[id];
-  saveAll();
+  saveAndNotify();
   renderAll();
-  showToast('Data berhasil disimpan');
 }
 
 function changeDay(delta) {
@@ -1291,16 +1297,15 @@ function addDefect() {
   const data = getDayData(key);
   data.defects.push({ label, type: sel.value });
   inp.value = '';
-  saveAll();
+  saveAndNotify('Defect ditambahkan ✓');
   renderAll();
-  showToast('Defect ditambahkan');
 }
 
 function delDefect(i) {
   const key  = dateKey(currentOffset);
   const data = getDayData(key);
   data.defects.splice(i, 1);
-  saveAll();
+  saveAndNotify('Defect dihapus ✓');
   renderAll();
 }
 
@@ -1311,8 +1316,7 @@ function saveNotes() {
   const key  = dateKey(currentOffset);
   const data = getDayData(key);
   data.notes = document.getElementById('notesArea').value;
-  saveAll();
-  showToast('Catatan tersimpan ✓');
+  saveAndNotify('Catatan tersimpan ✓');
 }
 
 // ═══════════════════════════════════════
@@ -1454,9 +1458,8 @@ function confirmResetAll() {
     () => {
       allData  = {};
       taskList = [...DEFAULT_TASKS];
-      saveAll();
+      saveAndNotify('Semua data direset ke default');
       renderAll();
-      showToast('Semua data direset ke default');
     }
   );
 }
